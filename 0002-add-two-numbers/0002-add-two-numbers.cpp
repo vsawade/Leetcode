@@ -10,30 +10,42 @@
  */
 class Solution {
 public:
-    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2, int carry = 0) {
-        // Base case: if both lists are empty and no carry, return null
-        if (!l1 && !l2 && !carry) {
-            return nullptr;
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        ListNode* head = nullptr;  // Initialize the head of the result list
+        ListNode* tail = nullptr;  // Tail to track the last node for easy appending
+        int carry = 0;  // Variable to track carry over
+        
+        // Loop until both lists are exhausted and there's no carry
+        while (l1 != nullptr || l2 != nullptr || carry) {
+            int sum = carry;  // Start with the carry from the previous iteration
+            
+            if (l1 != nullptr) {
+                sum += l1->val;  // Add value from l1 if available
+                l1 = l1->next;  // Move to the next node in l1
+            }
+            
+            if (l2 != nullptr) {
+                sum += l2->val;  // Add value from l2 if available
+                l2 = l2->next;  // Move to the next node in l2
+            }
+            
+            carry = sum / 10;  // Compute the new carry
+            sum = sum % 10;  // The new value of the node
+            
+            // Create the new node for the result list
+            ListNode* newNode = new ListNode(sum);
+            
+            // If the list is empty, initialize the head
+            if (head == nullptr) {
+                head = newNode;
+                tail = head;  // Tail will track the last node for easy appending
+            } else {
+                tail->next = newNode;  // Append the new node
+                tail = newNode;  // Move the tail to the new last node
+            }
         }
-        
-        int sum = carry;  // Initialize sum with carry
-        
-        // Add values from the lists if nodes are available
-        if (l1) {
-            sum += l1->val;
-            l1 = l1->next;
-        }
-        if (l2) {
-            sum += l2->val;
-            l2 = l2->next;
-        }
-        
-        // Create a new node with the current sum's last digit
-        ListNode* result = new ListNode(sum % 10);
-        
-        // Recur for the next nodes and pass the carry
-        result->next = addTwoNumbers(l1, l2, sum / 10);
-        
-        return result;
+
+        return head;  // Return the resulting linked list
     }
 };
+
