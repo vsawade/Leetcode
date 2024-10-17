@@ -11,13 +11,13 @@
 class Solution {
 public:
     ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
-        ListNode* dummyHead = new ListNode(0);  // A dummy node to handle edge cases
-        ListNode* current = dummyHead;  // Pointer to track the current node in the result list
-        int carry = 0;  // Variable to keep track of carry
-
-        // Traverse both lists until both are fully processed
+        ListNode* head = nullptr;  // Initialize the head of the result list
+        ListNode* tail = nullptr;  // Tail to track the last node for easy appending
+        int carry = 0;  // Variable to track carry over
+        
+        // Loop until both lists are exhausted and there's no carry
         while (l1 != nullptr || l2 != nullptr || carry) {
-            int sum = carry;  // Start with carry from previous iteration
+            int sum = carry;  // Start with the carry from the previous iteration
             
             if (l1 != nullptr) {
                 sum += l1->val;  // Add value from l1 if available
@@ -29,11 +29,22 @@ public:
                 l2 = l2->next;  // Move to the next node in l2
             }
             
-            carry = sum / 10;  // Calculate new carry
-            current->next = new ListNode(sum % 10);  // Create a new node for the sum's unit digit
-            current = current->next;  // Move to the next node
+            carry = sum / 10;  // Compute the new carry
+            sum = sum % 10;  // The new value of the node
+            
+            // Create the new node for the result list
+            ListNode* newNode = new ListNode(sum);
+            
+            // If the list is empty, initialize the head
+            if (head == nullptr) {
+                head = newNode;
+                tail = head;  // Tail will track the last node for easy appending
+            } else {
+                tail->next = newNode;  // Append the new node
+                tail = newNode;  // Move the tail to the new last node
+            }
         }
 
-        return dummyHead->next;  // Return the next node of the dummyHead, which is the actual result list
+        return head;  // Return the resulting linked list
     }
 };
